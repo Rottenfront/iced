@@ -34,7 +34,7 @@ pub mod primitive;
 pub mod settings;
 pub mod window;
 
-#[cfg(feature = "geometry")]
+
 pub mod geometry;
 
 mod backend;
@@ -56,7 +56,6 @@ pub use layer::Layer;
 pub use primitive::Primitive;
 pub use settings::Settings;
 
-#[cfg(any(feature = "image", feature = "svg"))]
 mod image;
 
 /// A [`wgpu`] graphics renderer for [`iced`].

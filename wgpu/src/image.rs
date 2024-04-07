@@ -1,9 +1,7 @@
 mod atlas;
 
-#[cfg(feature = "image")]
 mod raster;
 
-#[cfg(feature = "svg")]
 mod vector;
 
 use atlas::Atlas;
@@ -16,11 +14,7 @@ use std::cell::RefCell;
 use std::mem;
 
 use bytemuck::{Pod, Zeroable};
-
-#[cfg(feature = "image")]
 use crate::core::image;
-
-#[cfg(feature = "svg")]
 use crate::core::svg;
 
 #[cfg(feature = "tracing")]
@@ -28,9 +22,7 @@ use tracing::info_span;
 
 #[derive(Debug)]
 pub struct Pipeline {
-    #[cfg(feature = "image")]
     raster_cache: RefCell<raster::Cache>,
-    #[cfg(feature = "svg")]
     vector_cache: RefCell<vector::Cache>,
 
     pipeline: wgpu::RenderPipeline,
@@ -355,10 +347,10 @@ impl Pipeline {
         });
 
         Pipeline {
-            #[cfg(feature = "image")]
+
             raster_cache: RefCell::new(raster::Cache::default()),
 
-            #[cfg(feature = "svg")]
+
             vector_cache: RefCell::new(vector::Cache::default()),
 
             pipeline,
@@ -375,7 +367,7 @@ impl Pipeline {
         }
     }
 
-    #[cfg(feature = "image")]
+
     pub fn dimensions(&self, handle: &image::Handle) -> Size<u32> {
         let mut cache = self.raster_cache.borrow_mut();
         let memory = cache.load(handle);
@@ -383,7 +375,7 @@ impl Pipeline {
         memory.dimensions()
     }
 
-    #[cfg(feature = "svg")]
+
     pub fn viewport_dimensions(&self, handle: &svg::Handle) -> Size<u32> {
         let mut cache = self.vector_cache.borrow_mut();
         let svg = cache.load(handle);
@@ -409,15 +401,15 @@ impl Pipeline {
         let nearest_instances: &mut Vec<Instance> = &mut Vec::new();
         let linear_instances: &mut Vec<Instance> = &mut Vec::new();
 
-        #[cfg(feature = "image")]
+
         let mut raster_cache = self.raster_cache.borrow_mut();
 
-        #[cfg(feature = "svg")]
+
         let mut vector_cache = self.vector_cache.borrow_mut();
 
         for image in images {
             match &image {
-                #[cfg(feature = "image")]
+
                 layer::Image::Raster {
                     handle,
                     filter_method,
@@ -445,7 +437,7 @@ impl Pipeline {
                 #[cfg(not(feature = "image"))]
                 layer::Image::Raster { .. } => {}
 
-                #[cfg(feature = "svg")]
+
                 layer::Image::Vector {
                     handle,
                     color,
@@ -545,10 +537,10 @@ impl Pipeline {
     }
 
     pub fn end_frame(&mut self) {
-        #[cfg(feature = "image")]
+
         self.raster_cache.borrow_mut().trim(&mut self.texture_atlas);
 
-        #[cfg(feature = "svg")]
+
         self.vector_cache.borrow_mut().trim(&mut self.texture_atlas);
 
         self.prepare_layer = 0;

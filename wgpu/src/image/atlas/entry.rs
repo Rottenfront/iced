@@ -11,7 +11,7 @@ pub enum Entry {
 }
 
 impl Entry {
-    #[cfg(feature = "image")]
+
     pub fn size(&self) -> Size<u32> {
         match self {
             Entry::Contiguous(allocation) => allocation.size(),

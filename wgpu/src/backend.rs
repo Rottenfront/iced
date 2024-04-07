@@ -405,14 +405,14 @@ impl backend::Text for Backend {
     }
 }
 
-#[cfg(feature = "image")]
+
 impl backend::Image for Backend {
     fn dimensions(&self, handle: &crate::core::image::Handle) -> Size<u32> {
         self.image_pipeline.dimensions(handle)
     }
 }
 
-#[cfg(feature = "svg")]
+
 impl backend::Svg for Backend {
     fn viewport_dimensions(
         &self,
@@ -422,7 +422,7 @@ impl backend::Svg for Backend {
     }
 }
 
-#[cfg(feature = "geometry")]
+
 impl crate::graphics::geometry::Backend for Backend {
     type Frame = crate::geometry::Frame;
 

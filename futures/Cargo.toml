@@ -10,10 +10,6 @@ homepage.workspace = true
 categories.workspace = true
 keywords.workspace = true
 
-[package.metadata.docs.rs]
-rustdoc-args = ["--cfg", "docsrs"]
-all-features = true
-
 [features]
 thread-pool = ["futures/thread-pool"]
 

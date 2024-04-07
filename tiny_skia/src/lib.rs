@@ -8,13 +8,13 @@ mod primitive;
 mod settings;
 mod text;
 
-#[cfg(feature = "image")]
+
 mod raster;
 
-#[cfg(feature = "svg")]
+
 mod vector;
 
-#[cfg(feature = "geometry")]
+
 pub mod geometry;
 
 pub use iced_graphics as graphics;

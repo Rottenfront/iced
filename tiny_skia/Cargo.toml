@@ -11,9 +11,6 @@ categories.workspace = true
 keywords.workspace = true
 
 [features]
-image = ["iced_graphics/image"]
-svg = ["resvg"]
-geometry = ["iced_graphics/geometry"]
 
 [dependencies]
 iced_graphics.workspace = true
@@ -25,6 +22,4 @@ log.workspace = true
 rustc-hash.workspace = true
 softbuffer.workspace = true
 tiny-skia.workspace = true
-
 resvg.workspace = true
-resvg.optional = true

@@ -32,10 +32,10 @@ pub mod mesh;
 pub mod renderer;
 pub mod text;
 
-#[cfg(feature = "geometry")]
+
 pub mod geometry;
 
-#[cfg(feature = "image")]
+
 pub mod image;
 
 pub use antialiasing::Antialiasing;

@@ -263,7 +263,6 @@ impl Pipeline {
         let result = renderer.prepare(
             device,
             queue,
-            encoder,
             font_system,
             &mut self.atlas,
             glyphon::Resolution {

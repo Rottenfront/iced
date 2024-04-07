@@ -9,15 +9,12 @@ use std::collections::VecDeque;
 use std::num::NonZeroU32;
 
 pub struct Compositor {
-    context: softbuffer::Context<Box<dyn compositor::Window>>,
+    context: softbuffer::Context,
     settings: Settings,
 }
 
 pub struct Surface {
-    window: softbuffer::Surface<
-        Box<dyn compositor::Window>,
-        Box<dyn compositor::Window>,
-    >,
+    window: softbuffer::Surface,
     clip_mask: tiny_skia::Mask,
     primitive_stack: VecDeque<Vec<Primitive>>,
     background_color: Color,
@@ -54,17 +51,16 @@ impl crate::graphics::Compositor for Compositor {
         )
     }
 
+    #[allow(unsafe_code)]
     fn create_surface<W: compositor::Window + Clone>(
         &mut self,
         window: W,
         width: u32,
         height: u32,
     ) -> Self::Surface {
-        let window = softbuffer::Surface::new(
-            &self.context,
-            Box::new(window.clone()) as _,
-        )
-        .expect("Create softbuffer surface for window");
+        let window =
+            unsafe { softbuffer::Surface::new(&self.context, &window) }
+                .expect("Create softbuffer surface for window");
 
         let mut surface = Surface {
             window,
@@ -147,12 +143,13 @@ impl crate::graphics::Compositor for Compositor {
     }
 }
 
+#[allow(unsafe_code)]
 pub fn new<W: compositor::Window>(
     settings: Settings,
     compatible_window: W,
 ) -> Compositor {
     #[allow(unsafe_code)]
-    let context = softbuffer::Context::new(Box::new(compatible_window) as _)
+    let context = unsafe { softbuffer::Context::new(&compatible_window) }
         .expect("Create softbuffer context");
 
     Compositor { context, settings }

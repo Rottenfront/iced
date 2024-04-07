@@ -63,15 +63,15 @@ impl Compositor {
         if log::max_level() >= log::LevelFilter::Info {
             let available_adapters: Vec<_> = instance
                 .enumerate_adapters(settings.internal_backend)
-                .iter()
-                .map(wgpu::Adapter::get_info)
+                .map(|adapter| wgpu::Adapter::get_info(&adapter))
                 .collect();
             log::info!("Available adapters: {available_adapters:#?}");
         }
 
         #[allow(unsafe_code)]
-        let compatible_surface = compatible_window
-            .and_then(|window| instance.create_surface(window).ok());
+        let compatible_surface = compatible_window.and_then(|window| {
+            unsafe { instance.create_surface(&window) }.ok()
+        });
 
         let adapter_options = wgpu::RequestAdapterOptions {
             power_preference: wgpu::util::power_preference_from_env()
@@ -158,8 +158,8 @@ impl Compositor {
                         label: Some(
                             "iced_wgpu::window::compositor device descriptor",
                         ),
-                        required_features: wgpu::Features::empty(),
-                        required_limits: required_limits.clone(),
+                        features: wgpu::Features::empty(),
+                        limits: required_limits.clone(),
                     },
                     None,
                 )
@@ -211,7 +211,7 @@ pub async fn new<W: compositor::Window>(
 pub fn present<T: AsRef<str>>(
     compositor: &mut Compositor,
     backend: &mut Backend,
-    surface: &mut wgpu::Surface<'static>,
+    surface: &mut wgpu::Surface,
     primitives: &[Primitive],
     viewport: &Viewport,
     background_color: Color,
@@ -265,7 +265,7 @@ pub fn present<T: AsRef<str>>(
 
 impl graphics::Compositor for Compositor {
     type Renderer = Renderer;
-    type Surface = wgpu::Surface<'static>;
+    type Surface = wgpu::Surface;
 
     async fn with_backend<W: compositor::Window>(
         settings: graphics::Settings,
@@ -299,15 +299,14 @@ impl graphics::Compositor for Compositor {
         )
     }
 
+    #[allow(unsafe_code)]
     fn create_surface<W: compositor::Window>(
         &mut self,
         window: W,
         width: u32,
         height: u32,
     ) -> Self::Surface {
-        let mut surface = self
-            .instance
-            .create_surface(window)
+        let mut surface = unsafe { self.instance.create_surface(&window) }
             .expect("Create surface");
 
         if width > 0 && height > 0 {
@@ -333,7 +332,6 @@ impl graphics::Compositor for Compositor {
                 height,
                 alpha_mode: self.alpha_mode,
                 view_formats: vec![],
-                desired_maximum_frame_latency: 2,
             },
         );
     }

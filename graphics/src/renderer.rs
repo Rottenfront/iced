@@ -242,7 +242,7 @@ impl<B: Backend> mesh::Renderer for Renderer<B> {
     }
 }
 
-#[cfg(feature = "geometry")]
+
 impl<B> crate::geometry::Renderer for Renderer<B>
 where
     B: Backend + crate::geometry::Backend,

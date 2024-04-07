@@ -12,10 +12,10 @@ use std::borrow::Cow;
 pub struct Backend {
     text_pipeline: crate::text::Pipeline,
 
-    #[cfg(feature = "image")]
+
     raster_pipeline: crate::raster::Pipeline,
 
-    #[cfg(feature = "svg")]
+
     vector_pipeline: crate::vector::Pipeline,
 }
 
@@ -24,10 +24,10 @@ impl Backend {
         Self {
             text_pipeline: crate::text::Pipeline::new(),
 
-            #[cfg(feature = "image")]
+
             raster_pipeline: crate::raster::Pipeline::new(),
 
-            #[cfg(feature = "svg")]
+
             vector_pipeline: crate::vector::Pipeline::new(),
         }
     }
@@ -133,10 +133,10 @@ impl Backend {
 
         self.text_pipeline.trim_cache();
 
-        #[cfg(feature = "image")]
+
         self.raster_pipeline.trim_cache();
 
-        #[cfg(feature = "svg")]
+
         self.vector_pipeline.trim_cache();
     }
 
@@ -573,7 +573,7 @@ impl Backend {
                     transformation,
                 );
             }
-            #[cfg(feature = "image")]
+
             Primitive::Image {
                 handle,
                 filter_method,
@@ -606,7 +606,7 @@ impl Backend {
                     "Unsupported primitive in `iced_tiny_skia`: {primitive:?}",
                 );
             }
-            #[cfg(feature = "svg")]
+
             Primitive::Svg {
                 handle,
                 bounds,
@@ -1002,7 +1002,7 @@ impl backend::Text for Backend {
     }
 }
 
-#[cfg(feature = "image")]
+
 impl backend::Image for Backend {
     fn dimensions(
         &self,
@@ -1012,7 +1012,7 @@ impl backend::Image for Backend {
     }
 }
 
-#[cfg(feature = "svg")]
+
 impl backend::Svg for Backend {
     fn viewport_dimensions(
         &self,
@@ -1022,7 +1022,7 @@ impl backend::Svg for Backend {
     }
 }
 
-#[cfg(feature = "geometry")]
+
 impl crate::graphics::geometry::Backend for Backend {
     type Frame = crate::geometry::Frame;
 

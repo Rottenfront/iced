@@ -4,7 +4,7 @@ use crate::core::Color;
 use crate::futures::{MaybeSend, MaybeSync};
 use crate::{Error, Settings, Viewport};
 
-use raw_window_handle::{HasDisplayHandle, HasWindowHandle};
+use raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle};
 use std::future::Future;
 use thiserror::Error;
 
@@ -92,12 +92,16 @@ pub trait Compositor: Sized {
 /// This is just a convenient super trait of the `raw-window-handle`
 /// traits.
 pub trait Window:
-    HasWindowHandle + HasDisplayHandle + MaybeSend + MaybeSync + 'static
+    HasRawWindowHandle + HasRawDisplayHandle + MaybeSend + MaybeSync + 'static
 {
 }
 
 impl<T> Window for T where
-    T: HasWindowHandle + HasDisplayHandle + MaybeSend + MaybeSync + 'static
+    T: HasRawWindowHandle
+        + HasRawDisplayHandle
+        + MaybeSend
+        + MaybeSync
+        + 'static
 {
 }
 
