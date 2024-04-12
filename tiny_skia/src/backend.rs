@@ -12,9 +12,7 @@ use std::borrow::Cow;
 pub struct Backend {
     text_pipeline: crate::text::Pipeline,
 
-
     raster_pipeline: crate::raster::Pipeline,
-
 
     vector_pipeline: crate::vector::Pipeline,
 }
@@ -23,11 +21,7 @@ impl Backend {
     pub fn new() -> Self {
         Self {
             text_pipeline: crate::text::Pipeline::new(),
-
-
             raster_pipeline: crate::raster::Pipeline::new(),
-
-
             vector_pipeline: crate::vector::Pipeline::new(),
         }
     }
@@ -133,9 +127,7 @@ impl Backend {
 
         self.text_pipeline.trim_cache();
 
-
         self.raster_pipeline.trim_cache();
-
 
         self.vector_pipeline.trim_cache();
     }
@@ -1002,7 +994,6 @@ impl backend::Text for Backend {
     }
 }
 
-
 impl backend::Image for Backend {
     fn dimensions(
         &self,
@@ -1012,7 +1003,6 @@ impl backend::Image for Backend {
     }
 }
 
-
 impl backend::Svg for Backend {
     fn viewport_dimensions(
         &self,
@@ -1021,7 +1011,6 @@ impl backend::Svg for Backend {
         self.vector_pipeline.viewport_dimensions(handle)
     }
 }
-
 
 impl crate::graphics::geometry::Backend for Backend {
     type Frame = crate::geometry::Frame;

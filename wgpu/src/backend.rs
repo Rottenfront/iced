@@ -14,7 +14,7 @@ use crate::{Layer, Settings};
 #[cfg(feature = "tracing")]
 use tracing::info_span;
 
-#[cfg(any(feature = "image", feature = "svg"))]
+
 use crate::image;
 
 use std::borrow::Cow;
@@ -29,7 +29,6 @@ pub struct Backend {
     text_pipeline: text::Pipeline,
     triangle_pipeline: triangle::Pipeline,
     pipeline_storage: pipeline::Storage,
-    #[cfg(any(feature = "image", feature = "svg"))]
     image_pipeline: image::Pipeline,
     staging_belt: wgpu::util::StagingBelt,
 }
@@ -48,7 +47,7 @@ impl Backend {
         let triangle_pipeline =
             triangle::Pipeline::new(device, format, settings.antialiasing);
 
-        #[cfg(any(feature = "image", feature = "svg"))]
+
         let image_pipeline = {
             let backend = _adapter.get_info().backend;
 
@@ -61,7 +60,7 @@ impl Backend {
             triangle_pipeline,
             pipeline_storage: pipeline::Storage::default(),
 
-            #[cfg(any(feature = "image", feature = "svg"))]
+
             image_pipeline,
 
             // TODO: Resize belt smartly (?)
@@ -130,7 +129,7 @@ impl Backend {
         self.text_pipeline.end_frame();
         self.triangle_pipeline.end_frame();
 
-        #[cfg(any(feature = "image", feature = "svg"))]
+
         self.image_pipeline.end_frame();
     }
 
@@ -184,7 +183,7 @@ impl Backend {
                 );
             }
 
-            #[cfg(any(feature = "image", feature = "svg"))]
+
             {
                 if !layer.images.is_empty() {
                     let scaled =
@@ -243,7 +242,7 @@ impl Backend {
 
         let mut quad_layer = 0;
         let mut triangle_layer = 0;
-        #[cfg(any(feature = "image", feature = "svg"))]
+
         let mut image_layer = 0;
         let mut text_layer = 0;
 
@@ -330,7 +329,7 @@ impl Backend {
                 ));
             }
 
-            #[cfg(any(feature = "image", feature = "svg"))]
+
             {
                 if !layer.images.is_empty() {
                     self.image_pipeline.render(
@@ -405,13 +404,11 @@ impl backend::Text for Backend {
     }
 }
 
-
 impl backend::Image for Backend {
     fn dimensions(&self, handle: &crate::core::image::Handle) -> Size<u32> {
         self.image_pipeline.dimensions(handle)
     }
 }
-
 
 impl backend::Svg for Backend {
     fn viewport_dimensions(
@@ -421,7 +418,6 @@ impl backend::Svg for Backend {
         self.image_pipeline.viewport_dimensions(handle)
     }
 }
-
 
 impl crate::graphics::geometry::Backend for Backend {
     type Frame = crate::geometry::Frame;
